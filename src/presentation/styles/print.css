@@ -1,0 +1,139 @@
+/**
+ * print.css — Sprint 5 / LT-501, LT-503, LT-504
+ * CSS Print Media Query cho Sách Gia Phả (Ancestry Book)
+ */
+
+/* ─── Page setup ─────────────────────────────────────────────────── */
+@page {
+    size: A4 portrait;
+    margin: 2cm 2.5cm;
+}
+
+@media print {
+
+    /* ── 1. Ẩn toàn bộ UI chrome ─────────────────────────────────── */
+    aside,
+    header,
+    footer,
+    nav,
+    button,
+    .no-print,
+    [data-no-print] {
+        display: none !important;
+    }
+
+    /* ── 2. CRITICAL FIX: Reset layout containers vây quanh AncestryBook ──
+       Các wrapper div có h-screen + overflow-hidden làm print engine
+       chỉ thấy phần đang hiển thị (1 trang). Cần reset tất cả về auto. */
+
+    html,
+    body {
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+        font-family: Georgia, "Times New Roman", serif !important;
+        font-size: 11pt;
+    }
+
+    /* Root flex wrapper: print-root */
+    .print-root {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+    }
+
+    /* Main column wrapper: print-main-col */
+    .print-main-col {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        flex: none !important;
+        width: 100% !important;
+    }
+
+    /* <main> element: print-main */
+    .print-main {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        position: static !important;
+        flex: none !important;
+    }
+
+    /* AncestryBook scroll container: print-scroll-container */
+    .print-scroll-container {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        position: static !important;
+    }
+
+    /* ── 3. Màu sắc: in đen trắng rõ nét ────────────────────────── */
+    * {
+        color: black !important;
+        background: transparent !important;
+        background-image: none !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* ── 4. Bìa sách — 1 trang riêng ────────────────────────────── */
+    .ancestry-cover {
+        page-break-after: always;
+        break-after: page;
+        min-height: 100vh;
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 4cm 3cm;
+    }
+
+    /* ── 5. Mỗi FamilyUnit = 1 trang riêng ──────────────────────── */
+    .ancestry-unit {
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        display: block !important;
+        overflow: visible !important;
+        height: auto !important;
+        padding: 0;
+        margin: 0;
+        position: static !important;
+    }
+
+    .ancestry-unit:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+    }
+
+    /* ── 6. Số trang fallback (JS beforeprint sets data-page) ────── */
+    .ancestry-unit[data-page]::after {
+        content: "Trang " attr(data-page);
+        display: block;
+        text-align: center;
+        font-size: 9pt;
+        font-style: italic;
+        margin-top: 2cm;
+        padding-top: 0.5cm;
+        border-top: 0.5pt solid #999 !important;
+    }
+
+    /* ── 7. Typography ──────────────────────────────────────────── */
+    h1,
+    h2,
+    h3,
+    h4 {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}
